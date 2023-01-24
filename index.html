@@ -167,10 +167,12 @@
                     name: null,
                     phone_number: null,
                 },
+                orderLessonId: null,
+                orderLessonSpaces: null,
             },
             //Functionality
             created: function () {
-                fetch("http://localhost:3000/collections/lessons").then(
+                fetch("http://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
                     function (response) {
                         response.json().then(
                             function (json) {
@@ -182,6 +184,7 @@
             },
             methods: {
                 addItemToCart: function (lesson) {
+                    //this.cart.push(lesson.id);
                     this.cart.push(lesson.id);
 
                 },
@@ -190,6 +193,33 @@
 
                 },
                 submitCheckoutForm() {
+                    this.computeLessonsForOrder();
+                    //Save an order POST and maybe update the availability PUT
+                    const newOrder= {
+                        "name": this.order.name,
+                        "phoneNumber": this.order.phone_number,
+                        "lessonId": this.orderLessonId, //id of the lesson picked
+                        "numberOfSpaces": 1 //spaces occupied of the lesson
+                    }
+
+                    fetch("http://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/order", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newOrder)
+                    }).then(
+                        function(response) {
+                            response.json().then(
+                                function(json) {
+                                    alert("Success: " + json.ackowledged);
+                                    console.log("Success: " + json.ackowledged);
+
+                                    //webstore.orders.push(newOrder)
+                                }
+                            )
+                        }
+                    )
                     alert("Thank you for submitting your order!");
 
                 },
@@ -232,6 +262,18 @@
                     }
 
                     this.sortBy = s;
+                },
+
+                computeLessonsForOrder() {
+                    console.log(this.cart.lessonId)
+
+                    this.cart.forEach(i => {
+                        this.orderLessonId = i
+                    })
+
+                    this.cart.forEach(i => {
+                        this.orderLessonId = i
+                    })
                 }
 
 
@@ -290,9 +332,7 @@
                         return toggleShowProduct();
                     }
 
-                }
-
-
+                },
             }
         })
 
