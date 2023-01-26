@@ -172,7 +172,7 @@
             },
             //Functionality
             created: function () {
-                fetch("http://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
+                fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
                     function (response) {
                         response.json().then(
                             function (json) {
@@ -202,7 +202,7 @@
                         "numberOfSpaces": 1 //spaces occupied of the lesson
                     }
 
-                    fetch("http://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/order", {
+                    fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/order", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
