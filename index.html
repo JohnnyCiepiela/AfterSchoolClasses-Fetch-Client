@@ -226,43 +226,36 @@
                         
                         this.cart.forEach(j => {
                             if (j == i.id) {
-                                console.log('YES')
+                                //PUT 
+                                const updateLesson= {
+                                    "availableSpaces": j.availableSpaces - 1
                             }
-                        })
 
-                    })
-
-                    /* const updateLesson= {
-                        "name": this.order.name,
-                        "phoneNumber": this.order.phone_number,
-                        "lessonId": this.lessonsIdsOrder, //ids of the lessons picked
-                        "numberOfSpaces": this.orderLessonSpaces //spaces occupied of the lesson
-                    }
-
-                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lesson._id}`, {
+                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${j._id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(
-
-
-                        )
+                        body: JSON.stringify(updateLesson)
                     }).then(
                         function(response) {
                             response.json().then(
                                 function(json) {
                                     alert("Success: " + json.ackowledged);
-                                    console.log("Success: " + json.ackowledged);
+                                    //console.log("Success: " + json.ackowledged);
 
                                     //webstore.orders.push(newOrder)
                                 }
                             )
                         }
-                    ) */
+                    )
 
-                    //PUT route
 
+
+                    }
+                })
+
+                    })
 
                     alert("Thank you for submitting your order!");
 
