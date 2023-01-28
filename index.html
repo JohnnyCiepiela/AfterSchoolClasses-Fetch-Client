@@ -221,7 +221,13 @@
                     //loop here 
                     this.lessons.forEach(i => {
 
-                        this.cart.forEach(j => {
+                        for (j=0; j<=this.cart.length; j++)
+                        //this.cart.forEach(j => 
+                        {
+
+                            if (j == i.id) {
+
+                            }
 
                             if (j == i.id) {
                                 //PUT 
@@ -248,7 +254,8 @@
 
 
                             }
-                        })
+                        }
+                        //)
 
                     })
 
