@@ -195,7 +195,7 @@
                 submitCheckoutForm() {
                     this.computeLessonsForOrder();
                     //Save an order POST and maybe update the availability PUT
-                    const newOrder= {
+                    const newOrder = {
                         "name": this.order.name,
                         "phoneNumber": this.order.phone_number,
                         "lessonId": this.lessonsIdsOrder, //ids of the lessons picked
@@ -209,13 +209,10 @@
                         },
                         body: JSON.stringify(newOrder)
                     }).then(
-                        function(response) {
+                        function (response) {
                             response.json().then(
-                                function(json) {
-                                    //alert("Success: " + json.ackowledged);
-                                    //console.log("Success: " + json.ackowledged);
-
-                                    //webstore.orders.push(newOrder)
+                                function (json) {
+                                    console.log("Success: " + json.ackowledged);
                                 }
                             )
                         }
@@ -223,42 +220,39 @@
 
                     //loop here 
                     this.lessons.forEach(i => {
-                        
+
                         this.cart.forEach(j => {
-                            
+
                             if (j == i.id) {
                                 //PUT 
-                                const updateLesson= {
+                                const updateLesson = {
                                     "availableSpaces": i.availableSpaces - 1
-                            }
-
-                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(updateLesson)
-                    }).then(
-                        function(response) {
-                            response.json().then(
-                                function(json) {
-                                    alert("Success: " + json.ackowledged);
-                                    //console.log("Success: " + json.ackowledged);
-
-                                    //webstore.orders.push(newOrder)
                                 }
-                            )
-                        }
-                    )
+
+                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(updateLesson)
+                                }).then(
+                                    function (response) {
+                                        response.json().then(
+                                            function (json) {
+                                                console.log("Success: " + json.ackowledged);
+                                            }
+                                        )
+                                    }
+                                )
 
 
 
-                    }
-                })
+                            }
+                        })
 
                     })
 
-    
+
 
                     alert("Thank you for submitting your order!");
 
