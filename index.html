@@ -225,14 +225,12 @@
                     this.lessons.forEach(i => {
                         
                         this.cart.forEach(j => {
+                            
                             if (j == i.id) {
                                 //PUT 
                                 const updateLesson= {
-                                    "availableSpaces": j.availableSpaces - 1
+                                    "availableSpaces": i.availableSpaces - 1
                             }
-
-                            console.log(i.id)
-                            console.log(i._id)
 
                             fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
                         method: "PUT",
