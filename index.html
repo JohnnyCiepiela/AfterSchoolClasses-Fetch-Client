@@ -231,7 +231,7 @@
                                     "availableSpaces": j.availableSpaces - 1
                             }
 
-                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${j._id}`, {
+                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${j.id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
