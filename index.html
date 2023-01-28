@@ -200,7 +200,7 @@
                         "name": this.order.name,
                         "phoneNumber": this.order.phone_number,
                         "lessonId": this.lessonsIdsOrder, //ids of the lessons picked
-                        "numberOfSpaces": 1 //spaces occupied of the lesson
+                        "numberOfSpaces": this.orderLessonSpaces //spaces occupied of the lesson
                     }
 
                     fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/order", {
@@ -222,7 +222,49 @@
                         }
                     )
 
+                    //loop here 
+                    this.lessons.forEach(i => {
+                        
+                        this.cart.forEach(j => {
+                            if (j == i.id) {
+                                console.log('YES')
+                            }
+                        })
+
+                    })
+
+                    const updateLesson= {
+                        "name": this.order.name,
+                        "phoneNumber": this.order.phone_number,
+                        "lessonId": this.lessonsIdsOrder, //ids of the lessons picked
+                        "numberOfSpaces": this.orderLessonSpaces //spaces occupied of the lesson
+                    }
+
+                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lesson._id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(
+
+
+                        )
+                    }).then(
+                        function(response) {
+                            response.json().then(
+                                function(json) {
+                                    alert("Success: " + json.ackowledged);
+                                    console.log("Success: " + json.ackowledged);
+
+                                    //webstore.orders.push(newOrder)
+                                }
+                            )
+                        }
+                    )
+
                     //PUT route
+
+
                     alert("Thank you for submitting your order!");
 
                 },
