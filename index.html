@@ -231,6 +231,9 @@
                                     "availableSpaces": j.availableSpaces - 1
                             }
 
+                            console.log(j.id)
+                            console.log(j._id)
+
                             fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${j.id}`, {
                         method: "PUT",
                         headers: {
@@ -256,6 +259,8 @@
                 })
 
                     })
+
+    
 
                     alert("Thank you for submitting your order!");
 
