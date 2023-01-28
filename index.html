@@ -226,10 +226,10 @@
                         {
                             console.log(i)
                             console.log(i.id)
-                            console.log(j)
+                            console.log(j[i])
                         
 
-                            if (j == i.id) {
+                            if (j[i] == i.id) {
                                 //PUT 
                                 const updateLesson = {
                                     "availableSpaces": i.availableSpaces - 1
