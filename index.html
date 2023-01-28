@@ -221,15 +221,12 @@
                     //loop here 
                     this.lessons.forEach(i => {
 
-                        for (j=0; j<=this.cart.length; j++)
-                        //this.cart.forEach(j => 
-                        {
+                        this.cart.forEach(j => {
 
                         
 
                             if (j == i.id) {
                                 //PUT 
-                                console.log("123")
                                 const updateLesson = {
                                     "availableSpaces": i.availableSpaces - 1
                                 }
@@ -253,9 +250,7 @@
 
 
                             }
-                            j++
-                        }
-                        //)
+                        })
 
                     })
 
