@@ -378,7 +378,7 @@
                 //Computed property for the search bar
                 filteredList() {
                     return this.lessons.filter(lesson => {
-                        return lesson.title.toLowerCase().includes(this.search.toLowerCase()) || lesson.location.toLowerCase().includes(this.search.toLowerCase())
+                        return lesson.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || lesson.location.toLowerCase().includes(this.searchTerm.toLowerCase())
                     })
                 },
                 //Trying to refine the functionality of the cart
