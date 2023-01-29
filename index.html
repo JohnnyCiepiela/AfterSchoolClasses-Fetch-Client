@@ -196,7 +196,7 @@
                 sitename: "After School Club",
                 //Toggling value
                 showProduct: true,
-                //Search helper value
+                //Search helper values
                 searchTerm: '',
                 searchResults: [],
                 //Accessing the "lessons.js" array
@@ -213,7 +213,6 @@
                     phone_number: null,
                 },
                 lessonsIdsOrder: [],
-                //orderLessonId: null,
                 orderLessonSpaces: null,
             },
             //Functionality
@@ -230,31 +229,18 @@
             },
             methods: {
                 search() {
-                    console.log('search term', this.searchTerm)
                     fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
-                            //console.log('response', response.json())
-                            //console.log('search result', this.searchResults)
-                            console.log('data', data)
-                            console.log('data. results', data.results)
                             this.searchResults = data;
-                            console.log('search result', this.searchResults)
                         })
                         .catch(error => console.error(error))
                 },
-
-
-
-
                 addItemToCart: function (lesson) {
-                    //this.cart.push(lesson.id);
                     this.cart.push(lesson.id);
-
                 },
                 toggleShowProduct() {
                     this.showProduct = this.showProduct ? false : true;
-
                 },
                 submitCheckoutForm() {
                     this.computeLessonsForOrder();
@@ -284,12 +270,10 @@
                         }
                     )
 
-                    //loop here 
                     this.cart.forEach(j => {
 
                         this.lessons.forEach(i => {
 
-                            //this.cart.forEach(j => {
                             let count = null;
                             if (j == i.id) {
                                 //PUT 
@@ -314,20 +298,11 @@
                                         )
                                     }
                                 )
-
-
-
                             }
                         })
-
                     })
-
-
-
                     alert("Thank you for submitting your order!");
-
                 },
-
                 //Input validation methods
                 validName(name) {
                     var name_regex = /^[a-zA-Z]+$/;
@@ -337,7 +312,6 @@
                     var phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
                     return phone_regex.test(phone_number);
                 },
-
                 canAddToCart(lesson) {
                     return lesson.availableSpaces > this.cartCount(lesson.id);
                 },
@@ -347,48 +321,33 @@
                         if (this.cart[i] === id) {
                             count++;
                         }
-
                     }
                     return count;
                 },
                 classesLeft(lesson) {
                     return lesson.availableSpaces - this.cartCount(lesson.id);
-
                 },
                 removeLesson(index) {
                     this.cart.splice(index, 1);
                 },
-
                 //Sorting method
                 sort(s) {
                     if (s === this.sortBy) {
                         this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
                     }
-
                     this.sortBy = s;
                 },
-
                 computeLessonsForOrder() {
-                    console.log(this.cart.lessonId)
-
                     this.cart.forEach(i => {
                         this.lessonsIdsOrder.push(i);
                         this.orderLessonSpaces = this.orderLessonSpaces + 1;
                     })
-
-                    /* this.cart.forEach(i => {
-                        this.orderLessonId = i
-                    }) */
                 }
-
-
             },
             computed: {
                 totalItemsInTheCart: function () {
                     return this.cart.length || " ";
-
                 },
-
                 //Sorting computed property
                 sortedLessons() {
 
@@ -399,11 +358,9 @@
                         return 0;
                     });
                 },
-
                 canCheckout() {
                     return this.cart.length > 0;
                 },
-
                 //Computed properties for displaying user input requirements
                 canSubmitDetails() {
                     this.order.errors = [];
@@ -423,24 +380,6 @@
                     else {
                         return true;
                     }
-                },
-
-                //Computed property for the search bar
-                filteredList() {
-                    /* return this.lessons.filter(lesson => {
-                        return lesson.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || lesson.location.toLowerCase().includes(this.searchTerm.toLowerCase())
-                    }) */
-                    /* return this.lessons.filter(lesson => {
-                        return lesson.location.includes(this.searchResults)
-                    }) */
-                    return this.searchResults;
-                },
-                //Trying to refine the functionality of the cart
-                cartEmpty() {
-                    if (this.cart.length === 0) {
-                        return toggleShowProduct();
-                    }
-
                 },
             }
         })
