@@ -190,10 +190,11 @@
                         .then(response => response.json())
                         .then(data => {
                             //console.log('response', response.json())
-                            console.log('search result', this.searchResults)
+                            //console.log('search result', this.searchResults)
                             console.log('data', data)
                             console.log('data. results', data.results)
                             this.searchResults = data.results;
+                            console.log('search result', this.searchResults)
                         })
                         .catch(error => console.error(error))
                 },
@@ -381,9 +382,13 @@
 
                 //Computed property for the search bar
                 filteredList() {
-                    return this.lessons.filter(lesson => {
+                    /* return this.lessons.filter(lesson => {
                         return lesson.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || lesson.location.toLowerCase().includes(this.searchTerm.toLowerCase())
-                    })
+                    }) */
+                    /* return this.lessons.filter(lesson => {
+                        return lesson.location.includes(this.searchResults)
+                    }) */
+                    return this.searchResults;
                 },
                 //Trying to refine the functionality of the cart
                 cartEmpty() {
