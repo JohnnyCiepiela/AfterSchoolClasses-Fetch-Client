@@ -186,7 +186,7 @@
             methods: {
                 search() {
 
-                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
+                    fetch(`https://johnnyciepiela.github.io/AfterSchoolClasses-Fetch-Client/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
                             this.searchResults = data.results;
