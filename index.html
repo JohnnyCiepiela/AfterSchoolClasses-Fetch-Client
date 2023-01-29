@@ -185,13 +185,14 @@
             },
             methods: {
                 search() {
-                    console.log(this.searchTerm)
+                    console.log('search term', this.searchTerm)
                     fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
-                            console.log(this.searchResults)
-                            console.log(data)
-                            console.log(data.results)
+                            consol.log('response', response.json())
+                            console.log('search result', this.searchResults)
+                            console.log('data', data)
+                            console.log('data. results', data.results)
                             this.searchResults = data.results;
                         })
                         .catch(error => console.error(error))
