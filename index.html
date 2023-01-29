@@ -185,10 +185,13 @@
             },
             methods: {
                 search() {
-
-                    fetch(`https://johnnyciepiela.github.io/AfterSchoolClasses-Fetch-Client/search?q=${this.searchTerm}`)
+                    console.log(this.searchTerm)
+                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
+                            console.log(this.searchResults)
+                            console.log(data)
+                            console.log(data.results)
                             this.searchResults = data.results;
                         })
                         .catch(error => console.error(error))
