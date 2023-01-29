@@ -189,7 +189,7 @@
                     fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
-                            consol.log('response', response.json())
+                            console.log('response', response.json())
                             console.log('search result', this.searchResults)
                             console.log('data', data)
                             console.log('data. results', data.results)
