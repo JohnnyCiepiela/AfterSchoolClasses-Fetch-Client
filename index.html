@@ -37,7 +37,7 @@
 
             <!--Searching-->
             <div class="search_bar">
-                <input class="searchbar" type="text" v-model="search" placeholder="Search..." />
+                <input class="searchbar" type="text" v-model="searchTerm" @input="search" placeholder="Search..." />
             </div>
 
             <!--Sorting-->
@@ -152,7 +152,8 @@
                 //Toggling value
                 showProduct: true,
                 //Search helper value
-                search: '',
+                searchTerm: '',
+                searchResults: [],
                 //Accessing the "lessons.js" array
                 lessons: [], //lessons,
                 //Main cart array
@@ -183,6 +184,19 @@
                 );
             },
             methods: {
+                search() {
+
+                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.searchResults = data.results;
+                        })
+                        .catch(error => console.error(error))
+                },
+
+
+
+
                 addItemToCart: function (lesson) {
                     //this.cart.push(lesson.id);
                     this.cart.push(lesson.id);
@@ -213,26 +227,26 @@
                             response.json().then(
                                 function (json) {
                                     console.log("Success: " + json.ackowledged);
+
+
                                 }
                             )
                         }
                     )
 
                     //loop here 
-                    this.lessons.forEach(i => {
+                    this.cart.forEach(j => {
 
-                       // this.cart.forEach(j => 
-                       for (let j = 0; j < this.cart.length; j++)
-                        {
-                            console.log(i)
-                            console.log(i.id)
-                            console.log(j[i])
-                        
+                        this.lessons.forEach(i => {
 
-                            if (j[i] == i.id) {
+                            //this.cart.forEach(j => {
+                            let count = null;
+                            if (j == i.id) {
                                 //PUT 
+                                count = count + 1;
+
                                 const updateLesson = {
-                                    "availableSpaces": i.availableSpaces - 1
+                                    "availableSpaces": i.availableSpaces - count
                                 }
 
                                 fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
@@ -254,8 +268,7 @@
 
 
                             }
-                        }
-                       // )
+                        })
 
                     })
 
