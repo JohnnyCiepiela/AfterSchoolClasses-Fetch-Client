@@ -294,7 +294,7 @@
                     });
 
                     Object.keys(updateLessons).forEach(lessonId => {
-                        fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lessonId}`, {
+                        fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lesson._id}`, {
                             method: "PUT",
                             headers: {
                                 "Content-Type": "application/json",
