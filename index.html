@@ -270,29 +270,35 @@
                         }
                     )
 
-                    let count = 0;
+                    let count = {};
+
                     this.cart.forEach(j => {
-                        this.lessons.forEach(i => {
-                            if (j === i.id) {
-                                count++;
-                            }
-                        });
+                        if (!count[j]) count[j] = 0;
+                        count[j]++;
                     });
 
-                    const updateLesson = {
-                        "availableSpaces": i.availableSpaces - count
-                    };
+                    this.lessons.forEach(i => {
+                        if (count[i.id]) {
+                            const updateLesson = {
+                                "availableSpaces": i.availableSpaces - count[i.id]
+                            };
 
-                    fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(updateLesson)
-                    }).then(function (response) {
-                        response.json().then(function (json) {
-                            console.log("Success: " + json.ackowledged);
-                        });
+                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(updateLesson)
+                            }).then(
+                                function (response) {
+                                    response.json().then(
+                                        function (json) {
+                                            console.log("Success: " + json.ackowledged);
+                                        }
+                                    )
+                                }
+                            )
+                        }
                     });
                     alert("Thank you for submitting your order!");
                 },
