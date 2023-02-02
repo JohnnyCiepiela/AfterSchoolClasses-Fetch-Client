@@ -270,36 +270,37 @@
                         }
                     )
 
-                    const countMap = new Map();
-                    this.cart.forEach(j => {
-                        this.lessons.forEach(i => {
-                            if (j == i.id) {
-                                if (!countMap.has(i.id)) {
-                                    countMap.set(i.id, 0);
-                                }
-                                countMap.set(i.id, countMap.get(i.id) + 1);
+                    let count = 0;
+                    const updateLessons = {};
 
-                                const updateLesson = {
-                                    "availableSpaces": i.availableSpaces - countMap.get(i.id)
+                    this.cart.forEach(cartId => {
+                        this.lessons.forEach(lesson => {
+                            if (cartId === lesson.id) {
+                                if (!updateLessons[lesson._id]) {
+                                    updateLessons[lesson._id] = { availableSpaces: lesson.availableSpaces - 1 };
+                                } else {
+                                    updateLessons[lesson._id].availableSpaces--;
                                 }
-
-                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                                    method: "PUT",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(updateLesson)
-                                }).then(
-                                    function (response) {
-                                        response.json().then(
-                                            function (json) {
-                                                console.log("Success: " + json.ackowledged);
-                                            }
-                                        )
-                                    }
-                                )
                             }
                         });
+                    });
+
+                    Object.keys(updateLessons).forEach(lessonId => {
+                        fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lessonId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(updateLessons[lessonId])
+                        }).then(
+                            function (response) {
+                                response.json().then(
+                                    function (json) {
+                                        console.log("Success: " + json.acknowledged);
+                                    }
+                                );
+                            }
+                        );
                     });
                     alert("Thank you for submitting your order!");
                 },
