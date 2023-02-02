@@ -270,36 +270,37 @@
                         }
                     )
 
-                    counterMath = 0;
-                    counterSpanish = 0;
-                    counterCooking = 0;
-                    counterArts = 0;
-                    counterBiology = 0;
-                    counterChemistry = 0;
-                    counterGeography = 0;
-                    counterHistory = 0;
-                    counterPhotography = 0;
-                    counterPhysics = 0;
-                    counterBusiness = 0;
-                    counterZoology = 0;
+                    this.cart.forEach(j => {
 
-                    this.cart.forEach(cartId => {
-                        this.lessons.forEach(lesson => {
-                            if(cartId === lesson[0].id) {
-                                counterMath++;
-                                console.log(counterMath)
-                            }
-                            if(cartId === lesson[1].id) {
-                                counterSpanish++;
-                                console.log(counterSpanish)
-                            }
-                            if(cartId === lesson[2].id) {
-                                counterCooking++;
-                                console.log(counterCooking)
-                            }
-                        });
-                    });
+                        this.lessons.forEach(i => {
 
+                            let count = null;
+                            if (j == i.id) {
+                                //PUT 
+                                count = count + 1;
+
+                                const updateLesson = {
+                                    "availableSpaces": i.availableSpaces - count
+                                }
+
+                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(updateLesson)
+                                }).then(
+                                    function (response) {
+                                        response.json().then(
+                                            function (json) {
+                                                console.log("Success: " + json.ackowledged);
+                                            }
+                                        )
+                                    }
+                                )
+                            }
+                        })
+                    })
                     alert("Thank you for submitting your order!");
                 },
                 //Input validation methods
@@ -341,14 +342,6 @@
                         this.lessonsIdsOrder.push(i);
                         this.orderLessonSpaces = this.orderLessonSpaces + 1;
                     })
-                },
-                updateLessons() {
-
-            
-
-
-
-
                 }
             },
             computed: {
