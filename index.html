@@ -270,35 +270,34 @@
                         }
                     )
 
-                    let count = {};
+                    let counts = {};
 
                     this.cart.forEach(j => {
-                        if (!count[j]) count[j] = 0;
-                        count[j]++;
+                        if (!counts[j]) {
+                            counts[j] = 0;
+                        }
+                        counts[j]++;
                     });
 
-                    this.lessons.forEach(i => {
-                        if (count[i.id]) {
-                            const updateLesson = {
-                                "availableSpaces": i.availableSpaces - count[i.id]
-                            };
-
-                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                                method: "PUT",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(updateLesson)
-                            }).then(
-                                function (response) {
-                                    response.json().then(
-                                        function (json) {
-                                            console.log("Success: " + json.ackowledged);
-                                        }
-                                    )
-                                }
-                            )
-                        }
+                    Object.entries(counts).forEach(([id, count]) => {
+                        this.lessons.forEach(i => {
+                            if (id == i.id) {
+                                const updateLesson = {
+                                    availableSpaces: i.availableSpaces - count
+                                };
+                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify(updateLesson)
+                                })
+                                    .then(response => response.json())
+                                    .then(json => {
+                                        console.log("Success: " + json.acknowledged);
+                                    });
+                            }
+                        });
                     });
                     alert("Thank you for submitting your order!");
                 },
