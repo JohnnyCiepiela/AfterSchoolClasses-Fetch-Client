@@ -270,17 +270,18 @@
                         }
                     )
 
-                    let updateLessons = {};
+                    let count = 0;
+                    const updateLessons = {};
 
                     this.cart.forEach(cartId => {
-                        let foundLesson = this.lessons.find(lesson => cartId === lesson.id);
-                        if (foundLesson) {
-                            if (!updateLessons[foundLesson._id]) {
-                                updateLessons[foundLesson._id] = { availableSpaces: foundLesson.availableSpaces - 1 };
-                            } else {
-                                updateLessons[foundLesson._id].availableSpaces -= 1;
+                        this.lessons.forEach(lesson => {
+                            if (cartId === lesson.id) {
+                                if (!updateLessons[lesson._id]) {
+                                    updateLessons[lesson._id] = { availableSpaces: 0 };
+                                }
+                                updateLessons[lesson._id].availableSpaces++;
                             }
-                        }
+                        });
                     });
 
                     Object.keys(updateLessons).forEach(lessonId => {
@@ -289,12 +290,16 @@
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify(updateLessons[lessonId])
-                        }).then(response => {
-                            response.json().then(json => {
-                                console.log("Success: " + json.acknowledged);
-                            });
-                        });
+                            body: JSON.stringify({ availableSpaces: this.lessons.find(l => l._id === lessonId).availableSpaces - updateLessons[lessonId].availableSpaces })
+                        }).then(
+                            function (response) {
+                                response.json().then(
+                                    function (json) {
+                                        console.log("Success: " + json.acknowledged);
+                                    }
+                                );
+                            }
+                        );
                     });
                     alert("Thank you for submitting your order!");
                 },
