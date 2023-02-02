@@ -270,17 +270,25 @@
                         }
                     )
 
-                    let count = 0;
-                    const updateLessons = {};
+                    let lessonCounts = {};
 
                     this.cart.forEach(cartId => {
                         this.lessons.forEach(lesson => {
                             if (cartId === lesson.id) {
-                                if (!updateLessons[lesson._id]) {
-                                    updateLessons[lesson._id] = { availableSpaces: lesson.availableSpaces - 1 };
+                                if (!lessonCounts[lesson.id]) {
+                                    lessonCounts[lesson.id] = 1;
                                 } else {
-                                    updateLessons[lesson._id].availableSpaces--;
+                                    lessonCounts[lesson.id]++;
                                 }
+                            }
+                        });
+                    });
+
+                    const updateLessons = {};
+                    Object.keys(lessonCounts).forEach(lessonId => {
+                        this.lessons.forEach(lesson => {
+                            if (lessonId === lesson.id) {
+                                updateLessons[lesson._id] = { availableSpaces: lesson.availableSpaces - lessonCounts[lessonId] };
                             }
                         });
                     });
