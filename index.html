@@ -270,31 +270,34 @@
                         }
                     )
 
-                    let counts = new Map();
+                    const countMap = new Map();
                     this.cart.forEach(j => {
                         this.lessons.forEach(i => {
-                            if (j === i.id) {
-                                let count = counts.get(i.id) || 0;
-                                count += 1;
-                                counts.set(i.id, count);
+                            if (j == i.id) {
+                                if (!countMap.has(i.id)) {
+                                    countMap.set(i.id, 0);
+                                }
+                                countMap.set(i.id, countMap.get(i.id) + 1);
+
                                 const updateLesson = {
-                                    availableSpaces: i.availableSpaces - count
-                                };
-                                fetch(
-                                    `https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`,
-                                    {
-                                        method: "PUT",
-                                        headers: {
-                                            "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify(updateLesson)
+                                    "availableSpaces": i.availableSpaces - countMap.get(i.id)
+                                }
+
+                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(updateLesson)
+                                }).then(
+                                    function (response) {
+                                        response.json().then(
+                                            function (json) {
+                                                console.log("Success: " + json.ackowledged);
+                                            }
+                                        )
                                     }
                                 )
-                                    .then(response => {
-                                        response.json().then(json => {
-                                            console.log("Success: " + json.acknowledged);
-                                        });
-                                    });
                             }
                         });
                     });
