@@ -270,37 +270,30 @@
                         }
                     )
 
+                    let count = 0;
+
                     this.cart.forEach(j => {
+                        let foundLesson = this.lessons.find(i => j == i.id);
 
-                        this.lessons.forEach(i => {
+                        if (foundLesson) {
+                            count += 1;
+                            const updateLesson = {
+                                availableSpaces: foundLesson.availableSpaces - count
+                            };
 
-                            let count = null;
-                            if (j == i.id) {
-                                //PUT 
-                                count = count + 1;
-
-                                const updateLesson = {
-                                    "availableSpaces": i.availableSpaces - count
-                                }
-
-                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                                    method: "PUT",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(updateLesson)
-                                }).then(
-                                    function (response) {
-                                        response.json().then(
-                                            function (json) {
-                                                console.log("Success: " + json.ackowledged);
-                                            }
-                                        )
-                                    }
-                                )
-                            }
-                        })
-                    })
+                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${foundLesson._id}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(updateLesson)
+                            })
+                                .then(response => response.json())
+                                .then(json => {
+                                    console.log("Success: " + json.acknowledged);
+                                });
+                        }
+                    });
                     alert("Thank you for submitting your order!");
                 },
                 //Input validation methods
