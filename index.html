@@ -270,46 +270,38 @@
                         }
                     )
 
-                    let lessonCounts = {};
-
-                    this.cart.forEach(cartId => {
+                    const lessonCounts = this.cart.reduce((counts, cartId) => {
                         this.lessons.forEach(lesson => {
                             if (cartId === lesson.id) {
-                                if (!lessonCounts[lesson.id]) {
-                                    lessonCounts[lesson.id] = 1;
-                                } else {
-                                    lessonCounts[lesson.id]++;
-                                }
+                                counts[cartId] = (counts[cartId] || 0) + 1;
                             }
                         });
-                    });
+                        return counts;
+                    }, {});
 
-                    const updateLessons = {};
-                    Object.keys(lessonCounts).forEach(lessonId => {
+                    const updateLessons = Object.entries(lessonCounts).reduce((updates, [cartId, count]) => {
                         this.lessons.forEach(lesson => {
-                            if (lessonId === lesson.id) {
-                                updateLessons[lesson._id] = { availableSpaces: lesson.availableSpaces - lessonCounts[lessonId] };
+                            if (cartId === lesson.id) {
+                                updates[lesson._id] = { availableSpaces: lesson.availableSpaces - count };
                             }
                         });
-                    });
+                        return updates;
+                    }, {});
 
-                    Object.keys(updateLessons).forEach(lessonId => {
-                        fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lessonId}`, {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(updateLessons[lessonId])
-                        }).then(
-                            function (response) {
-                                response.json().then(
-                                    function (json) {
-                                        console.log("Success: " + json.acknowledged);
-                                    }
-                                );
-                            }
-                        );
-                    });
+                    Promise.all(
+                        Object.entries(updateLessons).map(([lessonId, update]) =>
+                            fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${lessonId}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(update)
+                            })
+                        )
+                    )
+                        .then(responses => Promise.all(responses.map(res => res.json())))
+                        .then(jsons => console.log(jsons.map(json => `Success: ${json.acknowledged}`)))
+                        .catch(error => console.error(error));
                     alert("Thank you for submitting your order!");
                 },
                 //Input validation methods
