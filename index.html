@@ -270,7 +270,36 @@
                         }
                     )
 
-                    updateLessons();
+                    counterMath = 0;
+                    counterSpanish = 0;
+                    counterCooking = 0;
+                    counterArts = 0;
+                    counterBiology = 0;
+                    counterChemistry = 0;
+                    counterGeography = 0;
+                    counterHistory = 0;
+                    counterPhotography = 0;
+                    counterPhysics = 0;
+                    counterBusiness = 0;
+                    counterZoology = 0;
+
+                    this.cart.forEach(cartId => {
+                        this.lessons.forEach(lesson => {
+                            if(cartId === lesson[0].id) {
+                                counterMath++;
+                                console.log(counterMath)
+                            }
+                            if(cartId === lesson[1].id) {
+                                counterSpanish++;
+                                console.log(counterSpanish)
+                            }
+                            if(cartId === lesson[2].id) {
+                                counterCooking++;
+                                console.log(counterCooking)
+                            }
+                        });
+                    });
+
                     alert("Thank you for submitting your order!");
                 },
                 //Input validation methods
@@ -315,31 +344,7 @@
                 },
                 updateLessons() {
 
-                    counterMath = 0;
-                    counterSpanish = 0;
-                    counterCooking = 0;
-                    counterArts = 0;
-                    counterBiology = 0;
-                    counterChemistry = 0;
-                    counterGeography = 0;
-                    counterHistory = 0;
-                    counterPhotography = 0;
-                    counterPhysics = 0;
-                    counterBusiness = 0;
-                    counterZoology = 0;
-
-                    this.cart.forEach(cartId => {
-                        this.lessons.forEach(lesson => {
-                            if(cartId === lesson[0].id) {
-                                counterMath++;
-                                console.log(counterMath)
-                            }
-                            if(cartId === lesson[1].id) {
-                                counterSpanish++;
-                                console.log(counterSpanish)
-                            }
-                        });
-                    });
+            
 
 
 
