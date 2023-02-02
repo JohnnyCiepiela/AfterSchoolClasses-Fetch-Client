@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
     <!--Importing Vue-->
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
-    <!-- <script src="lessons.js"></script> -->
     <!--CSS styling-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="mystyles.css">
@@ -63,8 +62,7 @@
             <div v-if="searchResults.length">
                 <main>
 
-                    <!--Product display of the available lessons-->
-                    <!-- <div v-for="lesson in sortedLessons, filteredList" class="float_child"> -->
+                    <!--Product display of the available lessons according to search requests-->
                     <div v-for="lesson in searchResults" class="float_child">
 
                         <figure>
@@ -101,7 +99,6 @@
                 </main>
 
             </div>
-
 
             <div v-else>
                 <main>
@@ -200,7 +197,7 @@
                 searchTerm: '',
                 searchResults: [],
                 //Accessing the "lessons.js" array
-                lessons: [], //lessons,
+                lessons: [],
                 //Main cart array
                 cart: [],
                 //Sorting helper values
@@ -212,11 +209,13 @@
                     name: null,
                     phone_number: null,
                 },
+                //Order information helper values
                 lessonsIdsOrder: [],
                 orderLessonSpaces: null,
             },
             //Functionality
             created: function () {
+                //Load up all the lessons
                 fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
                     function (response) {
                         response.json().then(
@@ -228,6 +227,7 @@
                 );
             },
             methods: {
+                //Searching functionality implemented in API
                 search() {
                     fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
@@ -236,20 +236,22 @@
                         })
                         .catch(error => console.error(error))
                 },
+                //Adding items to cart
                 addItemToCart: function (lesson) {
                     this.cart.push(lesson.id);
                 },
+                //Toggling between product page and checkout page
                 toggleShowProduct() {
                     this.showProduct = this.showProduct ? false : true;
                 },
+                //Submitting an order, updating the available spaces for the lessons submitted
                 submitCheckoutForm() {
                     this.computeLessonsForOrder();
-                    //Save an order POST and maybe update the availability PUT
                     const newOrder = {
                         "name": this.order.name,
                         "phoneNumber": this.order.phone_number,
-                        "lessonId": this.lessonsIdsOrder, //ids of the lessons picked
-                        "numberOfSpaces": this.orderLessonSpaces //spaces occupied of the lesson
+                        "lessonId": this.lessonsIdsOrder,
+                        "numberOfSpaces": this.orderLessonSpaces
                     }
 
                     fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/order", {
@@ -270,13 +272,12 @@
                         }
                     )
 
+                    //PUT route for updating the lessons
                     this.cart.forEach(j => {
-
                         this.lessons.forEach(i => {
 
                             let count = null;
                             if (j == i.id) {
-                                //PUT 
                                 count = count + 1;
 
                                 const updateLesson = {
@@ -312,9 +313,11 @@
                     var phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
                     return phone_regex.test(phone_number);
                 },
+                //Cart verifier
                 canAddToCart(lesson) {
                     return lesson.availableSpaces > this.cartCount(lesson.id);
                 },
+                //Cart count method
                 cartCount(id) {
                     let count = 0;
                     for (let i = 0; i < this.cart.length; i++) {
@@ -324,9 +327,11 @@
                     }
                     return count;
                 },
+                //Classes left computation
                 classesLeft(lesson) {
                     return lesson.availableSpaces - this.cartCount(lesson.id);
                 },
+                //Removing lessons from the checkout
                 removeLesson(index) {
                     this.cart.splice(index, 1);
                 },
@@ -337,6 +342,7 @@
                     }
                     this.sortBy = s;
                 },
+                //Computing lessons information for submitting an order
                 computeLessonsForOrder() {
                     this.cart.forEach(i => {
                         this.lessonsIdsOrder.push(i);
@@ -348,9 +354,7 @@
                 totalItemsInTheCart: function () {
                     return this.cart.length || " ";
                 },
-                //Sorting computed property
                 sortedLessons() {
-
                     return this.lessons.sort((p1, p2) => {
                         let modifier = 1;
                         if (this.sortDirection === 'desc') modifier = -1;
