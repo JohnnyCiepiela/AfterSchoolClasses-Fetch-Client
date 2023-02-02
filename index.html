@@ -270,31 +270,30 @@
                         }
                     )
 
-                    let counts = {};
-
+                    let counts = new Map();
                     this.cart.forEach(j => {
-                        if (!counts[j]) {
-                            counts[j] = 0;
-                        }
-                        counts[j]++;
-                    });
-
-                    Object.entries(counts).forEach(([id, count]) => {
                         this.lessons.forEach(i => {
-                            if (id == i.id) {
+                            if (j === i.id) {
+                                let count = counts.get(i.id) || 0;
+                                count += 1;
+                                counts.set(i.id, count);
                                 const updateLesson = {
                                     availableSpaces: i.availableSpaces - count
                                 };
-                                fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`, {
-                                    method: "PUT",
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify(updateLesson)
-                                })
-                                    .then(response => response.json())
-                                    .then(json => {
-                                        console.log("Success: " + json.acknowledged);
+                                fetch(
+                                    `https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/${i._id}`,
+                                    {
+                                        method: "PUT",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify(updateLesson)
+                                    }
+                                )
+                                    .then(response => {
+                                        response.json().then(json => {
+                                            console.log("Success: " + json.acknowledged);
+                                        });
                                     });
                             }
                         });
