@@ -277,9 +277,10 @@
                         this.lessons.forEach(lesson => {
                             if (cartId === lesson.id) {
                                 if (!updateLessons[lesson._id]) {
-                                    updateLessons[lesson._id] = { availableSpaces: 0 };
+                                    updateLessons[lesson._id] = { availableSpaces: lesson.availableSpaces - 1 };
+                                } else {
+                                    updateLessons[lesson._id].availableSpaces--;
                                 }
-                                updateLessons[lesson._id].availableSpaces++;
                             }
                         });
                     });
@@ -290,7 +291,7 @@
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({ availableSpaces: this.lessons.find(l => l._id === lessonId).availableSpaces - updateLessons[lessonId].availableSpaces })
+                            body: JSON.stringify(updateLessons[lessonId])
                         }).then(
                             function (response) {
                                 response.json().then(
