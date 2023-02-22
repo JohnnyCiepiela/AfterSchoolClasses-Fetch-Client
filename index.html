@@ -2,13 +2,16 @@
 <html lang="en">
 
 <head>
-    <!--Meta elements-->
+    <!--Meta elements-->\AfterSchoolClasses-Fetch-Client\index.html
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
     <!--Importing Vue-->
-    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
-    <!--CSS styling-->
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script> 
+    <!-- <script src="lessons.js"></script> -->
+    <!--CSS styling-->  
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="manifest" href="afterschoolclasses.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="mystyles.css">
 
@@ -20,6 +23,31 @@
     <div id="app">
         <header>
             <h1>After School Club</h1>
+
+            <button v-if="testConsole" @click="toggleShowTestConsole">
+                <span class="fas fa-text-height"></span>
+                Test Console
+            </button>
+            <div v-if="testConsole && showTestConsole" class="test-console">
+                <button @click="saveProductToDB" class="test-elem">
+                    <span class="fas fa-save"></span>
+                    Test Save a Product to the DB
+                </button>
+                <button @click="deleteAllCaches" class="test-elem">
+                    <span class="fas fa-trash"></span>
+                    Delete All Caches
+                </button>
+                <button @click="reloadPage" class="test-elem">
+                    <span class="fas fa-sync"></span>
+                    Reload Page
+                </button>
+                <strong class="test-elem">HTTPS Test: </strong>
+                <a v-bind:href="serverURL" target="_blank">link</a>
+                <button @click="unregisterAllServiceWorkers" class="test-elem">
+                    <span class="fab fa-unregistry"></span>
+                    Unregister All ServiceWorkers
+                </button>
+            </div>
         </header>
 
         <div class="checkout_button">
@@ -198,6 +226,9 @@
                 searchResults: [],
                 //Accessing the "lessons.js" array
                 lessons: [],
+                //serverURL: "http://localhost:3000/collections/lessons",
+                serverURL: "https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons",
+                //lessons: lessons,
                 //Main cart array
                 cart: [],
                 //Sorting helper values
@@ -212,11 +243,18 @@
                 //Order information helper values
                 lessonsIdsOrder: [],
                 orderLessonSpaces: null,
+                testConsole: true,
+                showTestConsole: true
             },
             //Functionality
             created: function () {
+
+                if ("serviceWorker" in navigator) {
+                    navigator.serviceWorker.register("service-worker.js");
+                }
+
                 //Load up all the lessons
-                fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
+               /*  fetch("https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons").then(
                     function (response) {
                         response.json().then(
                             function (json) {
@@ -224,18 +262,55 @@
                             }
                         )
                     }
+                ); */
+
+                fetch(this.serverURL).then(
+                    function(response) {
+                        response.json().then(
+                            function(json) {
+                                //alert(json);
+                                //console.log(json);
+                                webstore.products = json;
+                            }
+                        )
+                    }
                 );
+
+                
             },
             methods: {
+                toggleShowTestConsole() {
+                    this.showTestConsole = this.showTestConsole;
+                },
+                deleteAllCaches() {
+                    caches.keys().then(function(names) {
+                        for (let name of names)
+                        caches.delete(name);
+                    });
+
+                    console.log("All Caches Deleted!");
+                },
+                reloadPage() {
+                    window.location.reload();
+                },
+                unregisterAllServiceWorkers() {
+                    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                        for (let registration of registrations) {
+                            registration.unregister()
+                        }
+                    });
+
+                    console.log("ServiceWorkers Unregistered");
+                },
                 //Searching functionality implemented in API
-                search() {
+                /* search() {
                     fetch(`https://afterschoolclasses2-env.eba-upgmncnr.eu-west-2.elasticbeanstalk.com/collections/lessons/search?q=${this.searchTerm}`)
                         .then(response => response.json())
                         .then(data => {
                             this.searchResults = data;
                         })
                         .catch(error => console.error(error))
-                },
+                }, */
                 //Adding items to cart
                 addItemToCart: function (lesson) {
                     this.cart.push(lesson.id);
@@ -246,7 +321,7 @@
                 },
                 //Submitting an order, updating the available spaces for the lessons submitted
                 submitCheckoutForm() {
-                    this.computeLessonsForOrder();
+                    /* this.computeLessonsForOrder();
                     const newOrder = {
                         "name": this.order.name,
                         "phoneNumber": this.order.phone_number,
@@ -301,7 +376,7 @@
                                 )
                             }
                         })
-                    })
+                    }) */
                     alert("Thank you for submitting your order!");
                 },
                 //Input validation methods
